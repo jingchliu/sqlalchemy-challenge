@@ -23,8 +23,8 @@ def welcome():
         f"Precipitation:/api/v1.0/precipitation<br/>"
         f"Stations: /api/v1.0/stations<br/>"
         f"Temperature: /api/v1.0/tobs<br/>"
-        f"Start Date Only: /api/v1.0/<start><br/>"
-        f"With End Date: /api/v1.0/<start>/<end>"
+        f"Start Date Only: /api/v1.0/start(YYYY-MM-DD)<br/>"
+        f"With End Date: /api/v1.0/start(YYYY-MM-DD)/end(YYYY-MM-DD)"
     )
 @app.route("/api/v1.0/precipitation")
 def prcp():
@@ -58,11 +58,6 @@ def tobs():
     return jsonify(list_t)
 @app.route("/api/v1.0/<start>")
 def start(start):
-    # sanitized = start.replace("-", "").lower()
-    # for x in justice_league_members:
-    #     search_term = character["superhero"].replace(" ", "").lower()
-    #     if search_term == sanitized:
-    #         return jsonify(character)
     session = Session(engine)
     start_only=session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
         filter(Measurement.date >= start).all()
